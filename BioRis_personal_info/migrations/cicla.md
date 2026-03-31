@@ -1,5 +1,19 @@
+# commands DB
+- \l = list databases
+- \c nombre_db = connect to database
+- \dt = list tables (Si no aparece nada:probablemente estás en otro esquema (muy común))
+- \dt *.* = list all tables/schemes
+- \dn = list schemes
+- \d nombre_tabla = describe table
+
+Ejemplo:
+
+\dt ✔ (psql)
+SELECT ... ✔ (SQL estándar)
+
+
 # entrar a la base de datos de cicla
-psql -U postgres -W -h localhost cicla
+psql -U postgres -W -h localhost cicla (Trintrilen2026*)
 
 atajos proxy.sql cuidate : showed error at first.
  - proxy was missing and it needed to be installed/download = atajos proxy.sql.download.linux|proxy.sql.download.mac.m1|proxy.sql.download.mac.x64
@@ -32,7 +46,7 @@ the previous worked!
 ## wzp message: 
 [15:54, 3/23/2026] George: para Cicla tenemos que Dicomizar los pdf que contienen los informes, ahí matias es quien cacha el proceso de dicomizado para integrarlos al  archivo Dicom con las imágenes,  creo que como modalidad Doc
 [15:54, 3/23/2026] George: Mauricio said this
-[16:00, 3/23/2026] Cuidate Matias: en es ecaso deberias coenctar a su base de datos,debes usar atajos proxy.sql cuidate y ahi con usuario postgres:Bicarbonato2017, buscar la base de datos de cicla primero.
+[16:00, 3/23/2026] Cuidate Matias: en es ecaso deberias coenctar a su base de datos,debes usar atajos proxy.sql cuidate y ahi con usuario postgres:Trintrilen2026*, buscar la base de datos de cicla primero.
 
 # step 2 , DB connection
 
@@ -81,6 +95,7 @@ on calendar.id = report_history.calendar;
 ## matias: usa history de calendar_exam para unirlo con report_history.id
 ## deberias crear un script que genere un json con esos datos pro paciente, asi despues tambien deberias ver como obntener su informe pdf
 ## guarda en tu pc, genera un archivo que gener ese archivo json,asi despues cuando tengas que descragar los pdf, tienes una mini base de datos
+
 ## deberias alamcenarlo y tener alguan referecnia, de que pacienets le pertenecesn cuales pdf, ais despues sigue el apso de asociar el calendar con un study_uid
 
 

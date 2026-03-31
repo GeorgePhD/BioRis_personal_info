@@ -1,4 +1,4 @@
-# Cuidate Commands Done Working
+
 # screen name = jorgeEnvioTotalRestante
 ## change screen name = screen -S IdNumber -X sessionname newName
 - cat listas/provi_rm.csv | awk -F ',' '{print $1}' | parallel --jobs 10 --bar --progress ./exist.sh {}
@@ -37,3 +37,66 @@ def: El comando cat listas/provi_rm.csv | awk -F ',' '{print $1}' | head -n 100 
 
 
 - this saves the output in a file called jorgeFrom1201.txt
+
+
+TODO: This is next for providencia_rm migration
+[10:59, 3/25/2026] Juan Francisco Del Solar: Hay que sumar los demás archivos de antes del 1201
+[11:07, 3/25/2026] Juan Francisco Del Solar: Qué queda por hacer:
+1. Sacar el dato exacto de lo que “no se envió”
+2. ⁠Hacer la vertificación de todos los estudios para ver que es lo que falta, para la segunda iteración TODO: ./comparar_provi_csv_agfa.py --csv listas/provi_rm.csv --node AGFA_DICOM --bar --progress
+3. ⁠Enviar la segunda iteración.
+
+
+# uids mal formated:
+que son estos: Progreso: 168020/168043 (99.99%) | Enc: 44580 | NoEnc: 123440 | Err:
+   0/home/toth/orthanc/.venv/lib/python3.11/site-packages/pydicom/valuerep.py:440: UserWarning: Invalid value for
+   VR UI: '27.013.372.038.692'. Please see
+   <https://dicom.nema.org/medical/dicom/current/output/html/part05.html#table_6.2-1> for allowed values for each
+   VR.
+     warn_and_log(msg)
+✦ Esas son advertencias técnicas de la librería pydicom y te explico exactamente por qué aparecen:
+
+  1. ¿Qué significa el error?
+  El estándar DICOM es muy estricto con los UIDs (los identificadores de los estudios). Dice que los números entre
+  los puntos no pueden tener ceros a la izquierda (a menos que el número sea solo "0").
+
+  En tu caso, el UID '27.013.372.038.692' tiene:
+   * .013 (debería ser .13)
+   * .038 (debería ser .38)
+
+  pydicom detecta que esto es un "UID mal formado" según las reglas oficiales y te avisa.
+
+2. ¿Cómo afecta esto a tu comparación?
+   * A nivel de script: El script sigue funcionando, no se detiene.
+   * A nivel de búsqueda: Es muy probable que el PACS (AGFA) no encuentre esos estudios específicos porque, al ser
+     UIDs "inválidos" para el estándar, es posible que nunca se hayan guardado con ese formato exacto o que el PACS
+     los haya "limpiado" al recibirlos.
+
+  3. Sobre el progreso
+  Veo que vas en 99.99% (168,020 de 168,043). ¡Ya casi termina!
+
+  Resultados hasta ahora:
+   * Encontrados: 44,580 estudios.
+   * No Encontrados: 123,440 estudios.
+
+comparar agfa_dicom cuidate: ./findscu.sh movescu_study 1.2.840.113564.99.1..54234.2018126193622527.54234.2 AGFA_DICOM CUIDATE
+
+
+
+
+ 
+- revisé si existian los estudios en AGFA_DICOM y no estaban. 
+- use el exist_study_in_agfa.sh con head y tail.
+- los archivos (7)están en existe_para_comparacion.txt.notfound
+esto me entregó el script: Progreso: 168043/168043 (100.00%) | Enc: 44599 | NoEnc: 123444 | Err: 0
+- 
+
+
+enviando el resto de estudios de providencia rm: 123.444
+cat agfa_dicom_comparacion_no_encontrados.txt | parallel -j30 --progress --bar ./automatic.py {} AGFA_MIG envio_from_123444
+
+
+## Nuevo automatic_v20.py: 
+- cat agfa_dicom_comparacion_no_encontrados.txt | parallel -j30 --progress --bar ./automatic_v20.py {} AGFA_MIG envio_from_123444_v20
+
+

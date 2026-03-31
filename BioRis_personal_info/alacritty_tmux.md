@@ -31,8 +31,8 @@
 5. switch to tab number: prefix then [number]
 
 ## Panes
-1. split horizontally: prefix then "
-2. split vertically: prefix then %
+1. split horizontally: prefix then -
+2. split vertically: prefix then |
 3. switch to next pane: prefix then o
 4. switch to pane number: prefix then [number]
 5. close pane: prefix then x

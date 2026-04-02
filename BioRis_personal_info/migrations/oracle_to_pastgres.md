@@ -46,3 +46,8 @@ Confirmado: el volumen montado en /mnt/ tiene 441 GB disponibles, lo cual es má
   Puedes irte tranquilo, el sistema está trabajando de forma autónoma.
 
   
+  # connect to oracle db
+  
+  gcloud compute ssh --project=prod-cuidate-redsalud cuidate-arc-1 --ssh-flag="-vvv" --ssh-flag="-L 1521:10.1.210.102:1521 -g" -- -N
+
+  

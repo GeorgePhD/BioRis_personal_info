@@ -1,3 +1,5 @@
+## Cicla = clinica las amapolas
+
 # commands DB
 - \l = list databases
 - \c nombre_db = connect to database
@@ -125,4 +127,104 @@ GROUP BY patient.id;
 
 
 
+## Cicla Meeting (Clínica las amapólas) 15/04/2026
+always first: 
+- docker ps
+        - only if not running: sudo systemctl start docker or sudo systemctl enable docker
 
+## 1er paso, descargar la lista de estudios. csv,uiu, patientid.
+- atajos dicom = starts the process (toolkit) of dicomizing the pdfs
+        - http://localhost:9595 = web interface (toolkit) to see the dicomized pdfs 
+        inside toolkit:
+            1. modulo findscu -> request -> host: latam4.storage.bio, port: 9200, aetitle: CUI_DATE, call: CICLA.
+            2. enter date range, patient id, modality, etc. and click search.
+            3. download the dicomized pdfs. -> export csv
+
+      
+- atajos proxy.sql cuidate = connect to DB (Abrir proxy hacia google cloud sql)
+- connect through dbeaver
+
+## 2 buscar accession_no, report history, en sql se busca.
+    - calendar -> calendar.id = accession_no
+
+## remoto
+latam4 cicla está
+1. atajos cuidate2.red = Abrir puerto para navegar en red cuidate chile, puerto 9001
+2. atajos chrome.proxy -> opens chrome with proxy (tunnel)
+3. http://192.168.0.10:9595/v2/ui#/echo
+4. advanced tools: monitor de tareas
+5. comparar: source node cicla-cuidate / target node cicla-codesud
+
+## envíos
+6. date YYYYMMDD 19600101-20211231 (LAST SENT = 19600101-20221231) -> differences: 11464
+17042026: 20230101-20231231 -> differences 7351 -> Job ID fbdabe79
+17042026: 20240101-20241231 -> differences 7338 -> Job ID ff691474
+
+
+
+
+
+
+7. select studies to be sent -> move all
+8. 
+
+
+### "Dicomizar" un informe o un PDF significa convertir un documento estándar (que suele estar fuera del flujo de trabajo médico estructurado) en un objeto DICOM (Digital Imaging and Communications in Medicine).
+
+
+
+
+
+
+
+ 3 dicomizar informes/pdf para dicomizar con api
+ 4 migrar la informacion
+ encontrar los pdfs por paciente, crear script que geenra archivo csv.
+ enviar iamgenees al nodo que nos dejaron
+ crar script que se meta a la DB para ver el pdf que se genera para hacer la decomizacion
+ el pdf viene de otro lado, viene de una integracion
+ son visibles en el sistema
+ tenemos un pdf
+ generar el json, saber cual es el pdf, levantar el toolkit (programa que hizo matias, findscu, dicomizer), revisar y decomizar
+ enviar a latam4
+ conectar con el newpacs
+ atajos dicom = descarga el dicom/programa
+ localhost 9595
+ cicla.cui.date/index.php
+ falta conectar las partes
+ enviar desde el server, no del local. Matias instalará el toolkit en el server.
+
+1. check docker is running = docker ps
+2. start docker = s
+3. 
+4. 
+
+
+
+
+
+## https://cicla.cui.date/index.php
+1. traza -> traza completa -> despachados 
+1. traza -> traza completa -> d
+
+calendar_exam.history = report_history.id
+
+select * from calendar_exam where calendar_exam.exam_state in ('validado', 'despachado') order by id desc limit 100;
+
+create script to get all the studies that are in 'validado' or 'despachado' state and download the pdf.
+
+https://cicla.cui.date/inc/modules/report/viewer.php?history_view=37161&module=
+
+## atajos cuidate.bioris, en carpeta /server/data/repositories/salida  crea script o lo que necesites
+
+# command to download pdfs from cicla using the url
+
+## parallel -j 20 --retries 5 --joblog progreso.log 'curl -sSL "https://cicla.cui.date/inc/modules/report/viewer.php?history_view={}&module=" -o archivos_pdf/reporte_{}.pdf' :::: ids_limpios.txt
+
+columnas: 41.869
+
+
+
+## entrar en PCS -> toth -> todos -> cuidate-latam-1
+upload files from console to gcloud
+gcloud compute scp --project=prod-cuidate-redsalud Downloads/SITE_PPS_202603031342.csv cuidate-chile:/home/juan/ --tunnel-through-iap --compress

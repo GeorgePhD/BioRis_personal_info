@@ -1,3 +1,8 @@
+## Colors
+#4D24A6 = purple
+#6d81f2 = blue
+#Sf49f2 = blue
+
 # HRT
 hospital regional de talca
 

@@ -1,5 +1,44 @@
 # Prefix has been changed to ctrl+s
 
+## bash commands 
+- lsblk = list block devices
+- lsblk -f = list block devices with filesystem
+- sudo fdisk -l = Detailed hardware info
+- mount = mount devices
+- blkid = Show filesystem UUIDs
+- df -h = Show disk usage
+- df -hT = ? 
+- du -sh * = folder size
+- du -ah | sort -rh | head -20 = show biggest files (This command alone solves 80% of “disk full” problems.)
+- sudo du -xh / | sort -rh | head -20 = Find What Is Eating Space 
+- lsof | grep deleted = Deleted files still open (VERY COMMON)
+- sudo smartctl -a /dev/sda = SMART disk health
+- sudo hdparm -Tt /dev/sda = disk performance test
+- mkfs.ext4 /dev/sdb1 = create a partition and format disk
+- sudo mount /dev/sdb1 /mnt = mount disk
+- sudo umount /mnt = unmount disk
+- sudo nano /etc/fstab = persistent disk
+- ls -lah = List files with permissions, sizes, hidden files.
+- cd - = Jump back to previous directory
+- tree -L 2 = Show directory tree up to 2 levels deep / Visual project structure.
+
+## find 
+- find . -name "*.js"
+- find . -type f -mtime -7
+
+## less / cat 
+- less = use when large files, it shows only a portion scrollable part of it. loads only part of the file into memory, so it handles GB-sized files safely.
+- cat = dumps the entire file directly to stdout.
+
+## mental model 
+cat  = PRINT
+less = READ
+
+
+## df → filesystem problem / Golden Rule
+du → directory problem
+lsblk → hardware problem
+
 
 ## show history
 - history = show history newest to oldest

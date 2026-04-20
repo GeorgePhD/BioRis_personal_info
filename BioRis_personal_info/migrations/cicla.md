@@ -159,6 +159,7 @@ latam4 cicla está
 6. date YYYYMMDD 19600101-20211231 (LAST SENT = 19600101-20221231) -> differences: 11464
 17042026: 20230101-20231231 -> differences 7351 -> Job ID fbdabe79
 17042026: 20240101-20241231 -> differences 7338 -> Job ID ff691474
+20042026: 20250101-20251231 -> differences 8XXX -> missed
 
 
 
@@ -215,12 +216,25 @@ create script to get all the studies that are in 'validado' or 'despachado' stat
 
 https://cicla.cui.date/inc/modules/report/viewer.php?history_view=37161&module=
 
-## atajos cuidate.bioris, en carpeta /server/data/repositories/salida  crea script o lo que necesites
+# atajos cuidate.bioris, en carpeta /server/data/repositories/salida  crea script o lo que necesites
 
 # command to download pdfs from cicla using the url
 
-## parallel -j 20 --retries 5 --joblog progreso.log 'curl -sSL "https://cicla.cui.date/inc/modules/report/viewer.php?history_view={}&module=" -o archivos_pdf/reporte_{}.pdf' :::: ids_limpios.txt
+## parallel -j 20 --retries 5 --joblog progreso.log 'curl -sSL "https://cicla.cui.date/inc/modules/report/viewer.php?history_view={}&module=" -o pdfs_cicla_migration_10042026/reporte_{}.pdf' :::: calendar_exam_202604161717.csv
 
+### cut -d',' -f9 calendar_exam_202604161717.csv | tail -n +2 | parallel -j 20 --retries 5 --bar --joblog progreso.log 'curl -f -sSL "https://cicla.cui.date/inc/modules/report/viewer.php?history_view={}&module=" -o pdfs_cicla_migration_10042026/reporte_{}.pdf || { EXIT_CODE=$?; REASON="Desconocido"; [ $EXIT_CODE -eq 23 ] && REASON="Error de escritura (Carpeta o Disco)"; [ $EXIT_CODE -eq 22 ] && REASON="404/500 HTTP"; echo "ID {}: Falló con código $EXIT_CODE - Motivo: $REASON" >> errores_descarga.txt; }'
+
+### sudo bash -c 'cut -d"," -f9 calendar_exam_202604161717.csv | tail -n +2 | parallel -j 20 --retries 5 --bar --joblog progreso.log "curl -f -sSL \"https://cicla.cui.date/inc/modules/report/viewer.php?history_view={}&module=\" -o pdfs_cicla_migration_10042026/reporte_{}.pdf || { EXIT_CODE=\$?; echo \"ID {}: Falló con código \$EXIT_CODE\" >> errores_descarga.txt; }"'
+
+### cut -d',' -f9 calendar_exam_202604161717.csv | tail -n +2 | parallel -j 5 --retries 5 --bar --joblog progreso.log 'curl -f -sSL "https://cicla.cui.date/inc/modules/report/viewer.php?history_view={}&module=" -o /server/data/repositories/salida/pdfs_cicla_migration_16042026/reporte_{}.pdf || echo "ID {}: Falló con código $?" >> /server/data/repositories/salida/errores_descarga.txt'
+
+### cut -d',' -f9 calendar_exam_202604161717.csv | tail -n +2 | parallel -j 5 --retries 5 --bar --joblog progreso.log 'curl -f -sSL "https://cicla.cui.date/inc/modules/report/viewer.php?history_view={}&module=" -o /server/data/repositories/salida/pdfs_cicla_migration_16042026/reporte_{}.pdf || echo "ID {}: Falló con código $?" >> /server/data/repositories/salida/errores_descarga.txt'
+
+
+# download pdfs into own pc
+## cut -d',' -f9 Downloads/calendar_exam_202604161717.csv | tail -n +2 | tr -d '\r' | parallel -j 5 --bar --joblog progreso.log '/usr/bin/curl -f -sSL "https://cicla.cui.date/inc/modules/report/viewer.php?history_view={}&module=" -o /home/george/pdfs_cicla/reporte_{}.pdf'
+
+## check db en Dbeaver =  atajos proxy.sql cuidate
 columnas: 41.869
 
 
@@ -228,3 +242,20 @@ columnas: 41.869
 ## entrar en PCS -> toth -> todos -> cuidate-latam-1
 upload files from console to gcloud
 gcloud compute scp --project=prod-cuidate-redsalud Downloads/SITE_PPS_202603031342.csv cuidate-chile:/home/juan/ --tunnel-through-iap --compress
+
+pdf necesita ser guardado con el study_uid, pero como sabemos cual es el study_uid quye le cprrespomnde a cada pdf. 
+el estudio dicom que tiene un study_uid tiene un numero/columna , tabla calendar se llama ID , en la tabla calendar_exam se llama calendar y en la tabla report_history se llama calendar.
+
+en el ris siempre se llama calendar
+
+
+# STEPS TO GET UIDs
+
+1. get accession_no from calendar_exam = accession_n === calendar.id
+2. get accession numbers for patients and (atenciones)
+3. example study_uid = 1.2.345.patient_number.history_number 
+
+
+
+
+

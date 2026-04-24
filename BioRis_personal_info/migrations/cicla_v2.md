@@ -164,4 +164,4 @@ Check the monitor tool to compare source (`cicla-cuidate`) and target (`cicla-co
 - **Matias**:
   - Associate `calendar_exam` with `report_history` to find reports per patient.
   - Use `calendar_exam.history` to join with `report_history.id`.
-  - The toolkit will be installed on the server for final execution.
+  - The toolkit will be installed on the server for final execution

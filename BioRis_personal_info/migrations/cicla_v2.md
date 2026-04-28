@@ -96,9 +96,14 @@ Reports are downloaded using the `report_history.id` (history_view parameter).
 ```bash
 cut -d',' -f9 calendar_exam.csv | tail -n +2 | parallel -j 5 --retries 5 --bar --joblog progreso.log \
 'curl -f -sSL "https://cicla.cui.date/inc/modules/report/viewer.php?history_view={}&module=" \
--o ./pdfs_cicla/reporte_{}.pdf'
+-o pdfs_cicla_corregidos/{}.pdf'
 ```
 
+**Second command improved**
+
+```bash
+ find html_to_pdf_cicla -maxdepth 1 -name "*.pdf" -printf "%f\n" | parallel -j 5 --retries 5 --bar --joblog progreso_27042026.log 'curl -f -sSl "https://cicla.cui.date/repositories/cicla/reports/{}" -o pdfs_cicla_corregidos_27042026/{}'
+```
 ### Fix File Extensions
 
 Since downloaded PDFs often arrive with HTML bodies, rename them to `.html` first if necessary, then convert to proper PDF.
